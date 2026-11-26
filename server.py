@@ -6,13 +6,19 @@ app = Flask(__name__)
 ALLOWED = re.compile(r'^https?://([\w-]+\.)*(youtube\.com|youtu\.be|facebook\.com|fb\.watch|fb\.com)/', re.I)
 
 
+ORIGINS = {'https://sherifazb.github.io', 'http://localhost:5000', 'http://127.0.0.1:5000'}
+
+
 def valid(u):
     return bool(u and ALLOWED.match(u))
 
 
 @app.after_request
 def cors(r):
-    r.headers['Access-Control-Allow-Origin'] = '*'
+    o = request.headers.get('Origin', '')
+    if o in ORIGINS:
+        r.headers['Access-Control-Allow-Origin'] = o
+        r.headers['Vary'] = 'Origin'
     r.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     r.headers['Access-Control-Expose-Headers'] = 'Content-Disposition, Content-Length'
     return r
@@ -20,7 +26,12 @@ def cors(r):
 
 @app.get('/')
 def home():
-    return send_from_directory('.', 'index.html')
+    return 'darkroom backend ok'
+
+
+@app.get('/health')
+def health():
+    return jsonify(ok=True, yt_dlp=yt_dlp.version.__version__)
 
 
 @app.route('/api/info', methods=['POST', 'OPTIONS'])
@@ -70,4 +81,4 @@ def download():
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
