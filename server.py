@@ -1,12 +1,44 @@
 import os, re, glob, shutil, tempfile
 from flask import Flask, request, jsonify, send_file, send_from_directory, after_this_request
 import yt_dlp
+from flask import Flask, request, jsonify, send_file, send_from_directory, after_this_request
+import yt_dlp
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 4096
+TOKEN = os.environ.get('ACCESS_TOKEN', '')
+MAX_BYTES = 150 * 1024 * 1024
+MAX_SECONDS = 20 * 60
+SLOTS = threading.Semaphore(2)
+HITS = {}
+
+
+def too_many(ip, limit=20, window=600):
+    now = time.time()
+    h = [t for t in HITS.get(ip, []) if now - t < window]
+    h.append(now)
+    HITS[ip] = h
+    if len(HITS) > 5000:
+        HITS.clear()
+    return len(h) > limit
+
+
+@app.before_request
+def guard():
+    if not request.path.startswith('/api/') or request.method == 'OPTIONS':
+        return None
+    if request.headers.get('Origin', '') not in ORIGINS and request.headers.get('Sec-Fetch-Site', '') != 'same-origin':
+        return jsonify(error='forbidden'), 403
+    if TOKEN and request.headers.get('X-Token', '') != TOKEN and request.args.get('t', '') != TOKEN:
+        return jsonify(error='forbidden'), 403
+    ip = (request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0]).strip()
+    if too_many(ip):
+        return jsonify(error='طلبات كتير، استنى شوية.'), 429
+    return None
 ALLOWED = re.compile(r'^https?://([\w-]+\.)*(youtube\.com|youtu\.be|facebook\.com|fb\.watch|fb\.com)/', re.I)
 
 
-ORIGINS = {'https://sherifazb.github.io', 'http://localhost:5000', 'http://127.0.0.1:5000'}
+ORIGINS = {'https://sherifazb.github.io', 'http://localhost:5000', 'http://127.0.0.1:5000', 'null'}
 
 
 def valid(u):
@@ -19,7 +51,8 @@ def cors(r):
     if o in ORIGINS:
         r.headers['Access-Control-Allow-Origin'] = o
         r.headers['Vary'] = 'Origin'
-    r.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    r.headers['Access-Control-Allow-Headers'] = 'Content-Type, X-Token'
+    r.headers['Access-Control-Allow-Private-Network'] = 'true'
     r.headers['Access-Control-Expose-Headers'] = 'Content-Disposition, Content-Length'
     return r
 
@@ -42,7 +75,7 @@ def info():
     if not valid(u):
         return jsonify(error='اللينك مش يوتيوب ولا فيسبوك'), 400
     try:
-        with yt_dlp.YoutubeDL({'quiet': True, 'noplaylist': True, 'skip_download': True}) as y:
+        with yt_dlp.YoutubeDL({'quiet': True, 'noplaylist': True, 'skip_download': True, 'socket_timeout': 20}) as y:
             d = y.extract_info(u, download=False)
     except Exception:
         return jsonify(error='معرفتش أقرا اللينك ده، جرب لينك تاني'), 422
@@ -58,19 +91,26 @@ def download():
     if not valid(u) or not q.isdigit():
         return 'bad request', 400
     tmp = tempfile.mkdtemp()
-    opts = {'quiet': True, 'noplaylist': True, 'outtmpl': os.path.join(tmp, '%(title).80s.%(ext)s')}
+    opts = {'quiet': True, 'noplaylist': True, 'socket_timeout': 20, 'max_filesize': MAX_BYTES, 'match_filter': yt_dlp.utils.match_filter_func(f'duration < {MAX_SECONDS}'), 'outtmpl': os.path.join(tmp, '%(title).80s.%(ext)s')}
     if fmt == 'mp3':
         opts.update(format='bestaudio/best',
                     postprocessors=[{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': q}])
     else:
         opts.update(format=f'bestvideo[height<={q}]+bestaudio/best[height<={q}]/best', merge_output_format='mp4')
+    if not SLOTS.acquire(blocking=False):
+        shutil.rmtree(tmp, ignore_errors=True)
+        return 'busy', 503
     try:
         with yt_dlp.YoutubeDL(opts) as y:
             y.download([u])
         f = glob.glob(os.path.join(tmp, '*'))[0]
+        if os.path.getsize(f) > MAX_BYTES:
+            raise ValueError('too big')
     except Exception:
         shutil.rmtree(tmp, ignore_errors=True)
         return 'failed', 500
+    finally:
+        SLOTS.release()
 
     @after_this_request
     def clean(r):
