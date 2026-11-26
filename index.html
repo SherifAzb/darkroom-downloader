@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>غرفة التحميض</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@property --bg{syntax:'<color>';inherits:true;initial-value:#123a3f}
+@property --ink{syntax:'<color>';inherits:true;initial-value:#fff1e2}
+@property --a{syntax:'<color>';inherits:true;initial-value:#ff8a4c}
+@property --b{syntax:'<color>';inherits:true;initial-value:#0a2226}
+@property --film{syntax:'<color>';inherits:true;initial-value:#07181b}
+@property --dev{syntax:'<number>';inherits:true;initial-value:0}
+:root{--bg:#123a3f;--ink:#fff1e2;--a:#ff8a4c;--b:#0a2226;--film:#07181b}
+:root[data-grade=fuji]{--bg:#1f3a2c;--ink:#f8ece9;--a:#eeb2c9;--b:#10251a;--film:#0b1a12}
+:root[data-grade=bleach]{--bg:#d9d3c1;--ink:#1d1b18;--a:#b3361b;--b:#7d918b;--film:#2a2723}
+:root[data-grade=cyano]{--bg:#0f3d7a;--ink:#eaf3ff;--a:#bfe0ff;--b:#06214a;--film:#041633}
+*{box-sizing:border-box;margin:0}
+html{min-height:100%}
+body{min-height:100vh;color:var(--ink);font:400 1rem/1.7 'IBM Plex Sans Arabic',system-ui,sans-serif;background:
+radial-gradient(70vmax 45vmax at 92% -8%,color-mix(in oklab,var(--a) 42%,transparent),transparent 62%),
+radial-gradient(55vmax 55vmax at -12% 108%,color-mix(in oklab,var(--b) 90%,transparent),transparent 65%),
+linear-gradient(160deg,color-mix(in oklab,var(--bg) 88%,var(--a)),var(--bg) 40%,color-mix(in oklab,var(--bg) 70%,var(--b)));
+background-attachment:fixed;transition:--bg .9s,--ink .9s,--a .9s,--b .9s,--film .9s;overflow-x:hidden;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.16;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.2 -.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(120% 90% at 50% 40%,transparent 50%,rgba(0,0,0,.42))}
+.wrap{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:22px 20px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font:700 1.5rem 'Reem Kufi',sans-serif;letter-spacing:.01em}
+.grades{display:flex;gap:10px;align-items:center}
+.grades span{font-size:.85rem;opacity:.7;margin-inline-end:4px}
+.grades button{width:34px;height:34px;border-radius:50%;border:2px solid color-mix(in oklab,var(--ink) 35%,transparent);cursor:pointer;padding:0;transition:transform .25s,border-color .25s;position:relative}
+.grades button[aria-pressed=true]{border-color:var(--ink);transform:scale(1.18)}
+.grades button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.grades button:hover{transform:scale(1.1)}
+h1{font:700 clamp(2.5rem,9vw,6.4rem)/1.12 'Reem Kufi',sans-serif;margin:clamp(34px,8vw,84px) 0 14px;max-width:11ch;text-shadow:0 2px 0 color-mix(in oklab,var(--b) 70%,transparent),0 18px 50px color-mix(in oklab,var(--b) 90%,transparent)}
+.lead{max-width:34rem;opacity:.82;margin-bottom:clamp(28px,5vw,50px);font-size:1.05rem}
+.film{position:relative;background:var(--film);border-radius:5px;padding:0 0 0;box-shadow:0 40px 70px -28px rgba(0,0,0,.7),0 2px 0 color-mix(in oklab,var(--ink) 14%,transparent) inset,0 0 0 1px color-mix(in oklab,var(--ink) 10%,transparent);transition:--film .9s}
+.strip{height:26px;background:repeating-linear-gradient(90deg,transparent 0 9px,color-mix(in oklab,var(--bg) 92%,var(--a)) 9px 23px,transparent 23px 32px);background-size:32px 12px;background-repeat:repeat-x;background-position:right 6px center}
+.gate{margin:0 clamp(10px,2.5vw,26px);position:relative;border-radius:2px;background:linear-gradient(135deg,color-mix(in oklab,var(--bg) 80%,#000),color-mix(in oklab,var(--b) 80%,var(--bg)));box-shadow:inset 0 0 60px rgba(0,0,0,.55),inset 0 0 0 1px color-mix(in oklab,var(--ink) 12%,transparent)}
+.in{display:flex;gap:0;align-items:stretch;padding:clamp(18px,4vw,40px)}
+.in input{flex:1;min-width:0;direction:ltr;text-align:left;background:transparent;border:0;border-bottom:2px solid color-mix(in oklab,var(--ink) 40%,transparent);color:var(--ink);font:500 clamp(1rem,2.6vw,1.3rem) 'IBM Plex Sans Arabic',sans-serif;padding:14px 4px;outline:0;transition:border-color .3s}
+.in input::placeholder{color:color-mix(in oklab,var(--ink) 45%,transparent)}
+.in input:focus{border-color:var(--a)}
+.btn{font:600 1.05rem 'IBM Plex Sans Arabic',sans-serif;border:0;cursor:pointer;color:var(--b);background:linear-gradient(180deg,color-mix(in oklab,var(--a) 85%,#fff),var(--a));padding:0 clamp(18px,3vw,34px);border-radius:3px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 10px 24px -8px color-mix(in oklab,var(--a) 70%,#000);transition:transform .2s,filter .2s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.btn[disabled]{filter:saturate(.3) brightness(.8);cursor:wait}
+.ghost{background:none;border:1px solid color-mix(in oklab,var(--ink) 35%,transparent);color:var(--ink);box-shadow:none;margin-inline-end:10px;font-size:.9rem;padding:0 16px}
+.msg{min-height:1.7em;margin:14px clamp(14px,3vw,30px) 0;font-size:.95rem}
+.msg.err{color:color-mix(in oklab,var(--a) 70%,#ff5a4a)}
+.sheet{display:none;margin-top:clamp(26px,5vw,48px)}
+.sheet.on{display:block;animation:rise .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(0)}}
+.body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(18px,4vw,44px);padding:clamp(16px,3vw,30px)}
+.dt{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;border-radius:2px;box-shadow:0 20px 40px -18px rgba(0,0,0,.8)}
+.dt img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.18) brightness(calc(.12 + var(--dev) * .88));transition:filter .5s}
+.dt::before,.dt::after{content:'';position:absolute;inset:0;pointer-events:none;transition:opacity .5s}
+.dt::before{background:var(--a);mix-blend-mode:multiply}
+.dt::after{background:linear-gradient(0deg,color-mix(in oklab,var(--b) 90%,transparent),transparent 70%);mix-blend-mode:screen}
+.dt:hover img{filter:brightness(calc(.12 + var(--dev) * .88))}
+.dt:hover::before,.dt:hover::after{opacity:0}
+.dur{position:absolute;bottom:8px;inset-inline-start:8px;z-index:2;background:rgba(0,0,0,.65);color:#fff;font-size:.8rem;padding:1px 8px;border-radius:2px;direction:ltr}
+.meta h2{font:700 clamp(1.3rem,3vw,1.8rem)/1.35 'Reem Kufi',sans-serif;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.meta p{opacity:.7;margin:4px 0 20px;font-size:.92rem}
+.seg{display:inline-flex;border:1px solid color-mix(in oklab,var(--ink) 40%,transparent);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.seg button{background:none;border:0;color:var(--ink);font:600 .95rem 'IBM Plex Sans Arabic',sans-serif;padding:8px 22px;cursor:pointer;transition:background .25s,color .25s}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--b)}
+.seg button:focus-visible,.qs button:focus-visible{outline:2px solid var(--a);outline-offset:-2px}
+.qs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.qs button{background:color-mix(in oklab,var(--ink) 8%,transparent);border:1px solid color-mix(in oklab,var(--ink) 22%,transparent);color:var(--ink);font:500 .9rem 'IBM Plex Sans Arabic',sans-serif;padding:6px 14px;border-radius:3px;cursor:pointer;direction:ltr;transition:all .2s}
+.qs button[aria-pressed=true]{border-color:var(--a);color:var(--a);background:color-mix(in oklab,var(--a) 14%,transparent)}
+.act{display:flex;align-items:stretch;min-height:50px}
+.act .btn{flex:1}
+.bar{height:5px;margin:16px 0 4px;background:color-mix(in oklab,var(--ink) 15%,transparent);border-radius:1px;overflow:hidden}
+.bar i{display:block;height:100%;width:calc(var(--dev) * 100%);background:linear-gradient(90deg,var(--b),var(--a))}
+.pct{font-size:.85rem;opacity:.75;min-height:1.5em}
+.bottom{padding:22px 4px 0;font-size:.85rem;opacity:.6;max-width:36rem}
+@media(max-width:760px){.body{grid-template-columns:1fr}.in{flex-wrap:wrap;gap:14px}.in input{flex:1 1 100%}.in .btn{flex:1;min-height:48px}.ghost{flex:0 0 auto}.grades span{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="brand">غرفة التحميض</div>
+<div class="grades" id="grades" role="group" aria-label="ألوان الصفحة"><span>درجة اللون</span></div>
+</header>
+
+<h1>الصق اللينك وطلّع الصورة</h1>
+<p class="lead">لينك من يوتيوب أو فيسبوك، تختار صوت MP3 أو فيديو MP4، والباقي علينا.</p>
+
+<section class="film" aria-label="إدخال اللينك">
+<div class="strip"></div>
+<div class="gate">
+<form class="in" id="f" autocomplete="off">
+<input id="u" type="url" inputmode="url" placeholder="https://youtube.com/watch?v=..." aria-label="لينك الفيديو" required>
+<button type="button" class="btn ghost" id="paste">لصق</button>
+<button class="btn" id="go" type="submit">حمّض</button>
+</form>
+</div>
+<div class="msg" id="msg" role="status" aria-live="polite"></div>
+<div class="strip"></div>
+</section>
+
+<section class="film sheet" id="sheet" aria-label="النتيجة" style="--dev:0">
+<div class="strip"></div>
+<div class="gate">
+<div class="body">
+<div class="dt"><img id="th" alt=""><span class="dur" id="dur"></span></div>
+<div class="meta">
+<h2 id="ti"></h2>
+<p id="up"></p>
+<div class="seg" id="seg" role="group" aria-label="الصيغة">
+<button type="button" data-f="mp3" aria-pressed="true">MP3 صوت</button>
+<button type="button" data-f="mp4" aria-pressed="false">MP4 فيديو</button>
+</div>
+<div class="qs" id="qs" role="group" aria-label="الجودة"></div>
+<div class="act"><button class="btn" id="dl" type="button">نزّل</button></div>
+<div class="bar"><i></i></div>
+<div class="pct" id="pct"></div>
+</div>
+</div>
+</div>
+<div class="strip"></div>
+</section>
+
+<p class="bottom">نزّل بس المحتوى اللي ليك أو المسموح تنزّله. اللينكات الخاصة أو اللي محتاجة تسجيل دخول مش هتشتغل.</p>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const API=location.protocol==='file:'?'http://localhost:5000':'';
+const GRADES=[['teal','سينما','linear-gradient(135deg,#123a3f 50%,#ff8a4c 50%)'],['fuji','فوجي','linear-gradient(135deg,#1f3a2c 50%,#eeb2c9 50%)'],['bleach','بلييتش','linear-gradient(135deg,#d9d3c1 50%,#b3361b 50%)'],['cyano','سيانوتايب','linear-gradient(135deg,#0f3d7a 50%,#bfe0ff 50%)']];
+const Q={mp3:[['128','128k'],['192','192k'],['320','320k']],mp4:[['360','360p'],['480','480p'],['720','720p'],['1080','1080p']]};
+const DEF={mp3:'320',mp4:'720'};
+const URLRE=/^https?:\/\/([\w-]+\.)*(youtube\.com|youtu\.be|facebook\.com|fb\.watch|fb\.com)\//i;
+const st={url:'',fmt:'mp3',q:'320',busy:false};
+const sheet=$('#sheet');
+
+function setGrade(g){
+  document.documentElement.dataset.grade=g;
+  document.querySelectorAll('#grades button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===g));
+  try{localStorage.setItem('dr-grade',g)}catch(e){}
+}
+GRADES.forEach(([id,name,bg])=>{
+  const b=document.createElement('button');
+  b.type='button';b.dataset.g=id;b.title=name;b.setAttribute('aria-label',name);b.style.background=bg;
+  b.onclick=()=>setGrade(id);
+  $('#grades').appendChild(b);
+});
+let saved='teal';
+try{saved=localStorage.getItem('dr-grade')||'teal'}catch(e){}
+setGrade(saved);
+
+function say(t,err){const m=$('#msg');m.textContent=t||'';m.className='msg'+(err?' err':'')}
+function dev(v){sheet.style.setProperty('--dev',v)}
+function fmtTime(s){
+  if(!s)return'';
+  const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=Math.floor(s%60);
+  return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0');
+}
+function renderQ(){
+  const box=$('#qs');box.innerHTML='';
+  Q[st.fmt].forEach(([v,l])=>{
+    const b=document.createElement('button');
+    b.type='button';b.textContent=l;b.setAttribute('aria-pressed',v===st.q);
+    b.onclick=()=>{st.q=v;renderQ()};
+    box.appendChild(b);
+  });
+}
+$('#seg').onclick=e=>{
+  const b=e.target.closest('button');if(!b||st.busy)return;
+  st.fmt=b.dataset.f;st.q=DEF[st.fmt];
+  document.querySelectorAll('#seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  renderQ();
+};
+renderQ();
+
+$('#paste').onclick=async()=>{
+  try{const t=await navigator.clipboard.readText();$('#u').value=t.trim();$('#u').focus()}
+  catch(e){say('المتصفح مش مسمحلي أقرا الكليب بورد، الصق بإيدك.',true)}
+};
+
+$('#f').onsubmit=async e=>{
+  e.preventDefault();
+  const u=$('#u').value.trim();
+  if(!URLRE.test(u)){say('اللينك لازم يكون من يوتيوب أو فيسبوك.',true);return}
+  const go=$('#go');go.disabled=true;sheet.classList.remove('on');say('بنجهّز الفيلم...');
+  try{
+    const r=await fetch(API+'/api/info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:u})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'حصلت مشكلة');
+    st.url=u;
+    $('#ti').textContent=d.title||'';
+    $('#up').textContent=d.uploader||'';
+    $('#dur').textContent=fmtTime(d.duration);
+    $('#dur').style.display=d.duration?'':'none';
+    const img=$('#th');
+    img.onerror=()=>{img.removeAttribute('src')};
+    img.src=d.thumbnail||'';
+    dev(0.15);$('#pct').textContent='';
+    sheet.classList.add('on');
+    say('');
+    sheet.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(err){
+    say(err.message==='Failed to fetch'?'مش قادر أوصل للسيرفر. تأكد إن server.py شغال.':err.message,true);
+  }
+  go.disabled=false;
+};
+
+function nameFrom(h){
+  if(!h)return null;
+  let m=h.match(/filename\*=UTF-8''([^;]+)/i);
+  if(m)return decodeURIComponent(m[1]);
+  m=h.match(/filename="?([^";]+)/i);
+  return m?m[1]:null;
+}
+
+$('#dl').onclick=async()=>{
+  if(st.busy)return;
+  st.busy=true;const btn=$('#dl');btn.disabled=true;btn.textContent='بيتحمّض...';
+  let v=0.1;dev(v);$('#pct').textContent='السيرفر بيجهّز الملف، ثواني.';
+  const tick=setInterval(()=>{v+=(0.88-v)*0.03;dev(v)},350);
+  try{
+    const qs=new URLSearchParams({url:st.url,fmt:st.fmt,q:st.q});
+    const r=await fetch(API+'/api/download?'+qs);
+    if(!r.ok)throw new Error('فشل التحميل. جرب جودة تانية أو لينك تاني.');
+    clearInterval(tick);
+    const total=+r.headers.get('Content-Length')||0;
+    const rd=r.body.getReader();const parts=[];let got=0;
+    for(;;){
+      const{done,value}=await rd.read();
+      if(done)break;
+      parts.push(value);got+=value.length;
+      const mb=(got/1048576).toFixed(1);
+      if(total){dev(0.88+0.12*got/total);$('#pct').textContent=mb+' من '+(total/1048576).toFixed(1)+' MB'}
+      else $('#pct').textContent=mb+' MB';
+    }
+    dev(1);
+    const blob=new Blob(parts);
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=nameFrom(r.headers.get('Content-Disposition'))||('darkroom.'+st.fmt);
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    $('#pct').textContent='خلص. الملف نزل.';
+  }catch(err){
+    clearInterval(tick);dev(0.15);
+    $('#pct').textContent=err.message==='Failed to fetch'?'السيرفر مش شغال.':err.message;
+  }
+  btn.disabled=false;btn.textContent='نزّل';st.busy=false;
+};
+</script>
+</body>
+</html>
